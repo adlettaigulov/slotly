@@ -19,6 +19,7 @@ import type { AppointmentFormData } from "@/lib/types"
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onAppointmentCreated?: () => void
 }
 
 const STEPS = ["Клиент и услуга", "Мастер", "Время", "Подтверждение"]
@@ -32,7 +33,7 @@ const emptyForm: AppointmentFormData = {
   endTime: "",
 }
 
-export function NewAppointmentDialog({ open, onOpenChange }: Props) {
+export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated }: Props) {
   const [step, setStep] = useState(0)
   const [data, setData] = useState<AppointmentFormData>(emptyForm)
   const { masters, services, appointments, addAppointment } = useAppointments()
@@ -63,6 +64,7 @@ export function NewAppointmentDialog({ open, onOpenChange }: Props) {
     setData(emptyForm)
     setStep(0)
     onOpenChange(false)
+    onAppointmentCreated?.()
   }
 
   function handleOpenChange(open: boolean) {
@@ -78,34 +80,34 @@ export function NewAppointmentDialog({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[440px] max-sm:max-w-full max-sm:h-full max-sm:m-0 max-sm:rounded-none">
-        <DialogHeader>
-          <DialogTitle>Новая запись</DialogTitle>
+      <DialogContent className="sm:max-w-[560px] sm:gap-0 max-sm:max-w-full max-sm:h-full max-sm:m-0 max-sm:rounded-none max-sm:border-0 max-sm:p-6">
+        <DialogHeader className="pb-3 sm:pb-4">
+          <DialogTitle className="text-xl sm:text-lg">Новая запись</DialogTitle>
         </DialogHeader>
 
-        <div className="flex items-center gap-2 pb-4">
+        <div className="flex items-center max-sm:justify-center gap-4 sm:gap-2 pb-5 sm:pb-4">
           {STEPS.map((label, i) => (
-            <div key={label} className="flex items-center gap-2 flex-1">
+            <div key={label} className="flex items-center gap-2 flex-1 max-sm:flex-none">
               <div
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-medium ${
+                className={`flex h-8 w-8 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full text-sm sm:text-xs font-bold transition-all ${
                   i <= step
-                    ? "bg-foreground text-background"
+                    ? "bg-[hsl(350_65%_57%)] text-white shadow-sm"
                     : "bg-muted text-muted-foreground"
                 }`}
               >
                 {i + 1}
               </div>
               <span
-                className={`text-xs hidden sm:block ${
-                  i === step ? "text-foreground font-medium" : "text-muted-foreground"
+                className={`text-sm sm:text-xs hidden sm:block font-medium ${
+                  i === step ? "text-[hsl(350_65%_57%)]" : "text-muted-foreground"
                 }`}
               >
                 {label}
               </span>
               {i < STEPS.length - 1 && (
                 <div
-                  className={`h-px flex-1 ${
-                    i < step ? "bg-foreground" : "bg-border"
+                  className={`h-px flex-1 max-sm:hidden ${
+                    i < step ? "bg-[hsl(350_65%_57%)]" : "bg-border"
                   }`}
                 />
               )}
@@ -113,38 +115,47 @@ export function NewAppointmentDialog({ open, onOpenChange }: Props) {
           ))}
         </div>
 
-        {step === 0 && (
-          <StepClientService data={data} services={services} onChange={updateData} />
-        )}
-        {step === 1 && (
-          <StepMaster masters={masters} data={data} onChange={updateData} />
-        )}
-        {step === 2 && (
-          <StepTime
-            data={data}
-            appointments={appointments}
-            onChange={updateData}
-          />
-        )}
-        {step === 3 && (
-          <StepConfirmation
-            data={data}
-            master={master}
-            service={service}
-            onConfirm={handleConfirm}
-          />
-        )}
+        <div className="max-sm:flex-1 max-sm:overflow-y-auto">
+          <div className="animate-slide-up" key={step}>
+            {step === 0 && (
+              <StepClientService data={data} services={services} onChange={updateData} />
+            )}
+            {step === 1 && (
+              <StepMaster masters={masters} data={data} onChange={updateData} />
+            )}
+            {step === 2 && (
+              <StepTime
+                data={data}
+                appointments={appointments}
+                onChange={updateData}
+              />
+            )}
+            {step === 3 && (
+              <StepConfirmation
+                data={data}
+                master={master}
+                service={service}
+                onConfirm={handleConfirm}
+              />
+            )}
+          </div>
+        </div>
 
-        <div className="flex items-center justify-between pt-4">
+        <div className="flex items-center justify-between pt-5 sm:pt-4 gap-3">
           <Button
             variant="ghost"
             onClick={handleBack}
             disabled={step === 0}
+            className="h-12 sm:h-9 text-[15px] sm:text-sm flex-1 sm:flex-none"
           >
             Назад
           </Button>
           {step < STEPS.length - 1 && (
-            <Button onClick={handleNext} disabled={!canProceed()}>
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className="h-12 sm:h-9 text-[15px] sm:text-sm flex-1 sm:flex-none"
+            >
               Далее
             </Button>
           )}

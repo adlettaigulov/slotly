@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { useAppointments } from "@/components/providers/appointment-provider"
 import { AppointmentCard } from "./appointment-card"
-import { todayDate, services } from "@/lib/mock-data"
+import { todayDate, services, masterAccentHex } from "@/lib/mock-data"
 
-const TIME_SLOTS = Array.from({ length: 10 }, (_, i) => {
+const TIME_SLOTS = Array.from({ length: 11 }, (_, i) => {
   const hour = i + 9
   return `${String(hour).padStart(2, "0")}:00`
 })
@@ -27,22 +27,53 @@ interface Props {
 
 export function ScheduleView({ onNewAppointment }: Props) {
   const { masters, appointments } = useAppointments()
-  const [selectedMasterId, setSelectedMasterId] = useState<string | null>(masters[0].id)
+  const [now, setNow] = useState(new Date())
+
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 60000)
+    return () => clearInterval(t)
+  }, [])
 
   const todayAppointments = appointments.filter((a) => a.date === todayDate)
 
-  const filteredMasters = selectedMasterId
-    ? masters.filter((m) => m.id === selectedMasterId)
-    : masters
+  const currentHour = now.getHours()
+  const currentMin = now.getMinutes()
+
+  function getAppointmentsAtSlot(slot: string) {
+    return masters
+      .map((master) => {
+        const appt = todayAppointments.find(
+          (a) => a.masterId === master.id && a.startTime === slot
+        )
+        const service = appt
+          ? services.find((s) => s.id === appt.serviceId)
+          : undefined
+        return appt && service ? { appointment: appt, master, service } : null
+      })
+      .filter(Boolean) as { appointment: typeof todayAppointments[0]; master: typeof masters[0]; service: typeof services[0] }[]
+  }
+
+  const isCurrentHour = (slotIdx: number) => {
+    const h = 9 + slotIdx
+    return currentHour >= h && currentHour < h + 1
+  }
+
+  const currentMinOffset = currentMin
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex items-start pb-6">
+    <div className="flex flex-col animate-fade-in">
+      {/* Header */}
+      <header className="flex items-start pb-5 sm:pb-6">
         <div className="flex-1 text-center sm:text-left">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Расписание
-          </h1>
-          <p className="text-base text-muted-foreground mt-1.5">
+          <div className="flex items-center justify-center sm:justify-start gap-3">
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+              Расписание
+            </h1>
+            <span className="text-xs sm:text-[11px] font-semibold bg-primary/10 text-primary rounded-full px-3 sm:px-2.5 py-1.5 sm:py-1 border border-primary/20">
+              Сегодня
+            </span>
+          </div>
+          <p className="text-[15px] sm:text-base text-muted-foreground mt-1.5">
             {formatDate(todayDate)}
           </p>
         </div>
@@ -57,75 +88,156 @@ export function ScheduleView({ onNewAppointment }: Props) {
         )}
       </header>
 
-      <div className="flex gap-2 pb-6 flex-wrap justify-center sm:flex-nowrap sm:justify-start">
-        <button
-          onClick={() => setSelectedMasterId(null)}
-          className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors max-sm:hidden ${
-            selectedMasterId === null
-              ? "bg-foreground text-background border-foreground"
-              : "bg-background text-muted-foreground border-border hover:border-foreground/30"
-          }`}
-        >
-          Все
-        </button>
-        {masters.map((m) => (
-          <button
-            key={m.id}
-            onClick={() => setSelectedMasterId(m.id)}
-            className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-              selectedMasterId === m.id
-                ? "bg-foreground text-background border-foreground"
-                : "bg-background text-muted-foreground border-border hover:border-foreground/30"
-            }`}
-          >
-            {m.name}
-          </button>
-        ))}
+      {/* ─── MOBILE: timeline ─── */}
+      <div className="sm:hidden -mx-4 px-4">
+        <div className="relative pl-10">
+          {/* Vertical rail */}
+          <div className="absolute left-[18px] top-0 bottom-0 w-px bg-border/50" />
+
+          {/* Current time dot on rail */}
+          {TIME_SLOTS.some((_, i) => isCurrentHour(i)) && (
+            <div
+              className="absolute left-[18px] z-10 w-px"
+              style={{
+                top: `${TIME_SLOTS.findIndex((_, i) => isCurrentHour(i)) * 80 + currentMinOffset * (80 / 60)}px`,
+              }}
+            >
+              <div className="absolute -left-[5px] -top-[5px] h-[10px] w-[10px] rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+            </div>
+          )}
+
+          {TIME_SLOTS.map((slot, slotIdx) => {
+            const appts = getAppointmentsAtSlot(slot)
+            const occupied = appts.length > 0
+            const current = isCurrentHour(slotIdx)
+
+            return (
+              <div
+                key={slot}
+                className={`animate-fade-in-up pb-3 ${current ? "relative" : ""}`}
+                style={{ animationDelay: `${slotIdx * 0.025}s` }}
+              >
+                {/* Current time line */}
+                {current && (
+                  <div
+                    className="absolute left-0 right-0 z-20 pointer-events-none"
+                    style={{ top: `${currentMinOffset * (80 / 60)}px` }}
+                  >
+                    <div className="h-[2px] bg-red-500 w-full shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
+                  </div>
+                )}
+
+                <div className="flex items-start gap-4">
+                  {/* Time label */}
+                  <div className="flex items-center gap-2 shrink-0 pt-1 w-[28px]">
+                    <div
+                      className={`h-2.5 w-2.5 rounded-full shrink-0 ${
+                        occupied ? "bg-[hsl(350_65%_57%_/0.25)]" : "bg-transparent"
+                      }`}
+                    />
+                    <span className={`text-[13px] font-bold tabular-nums ${
+                      current ? "text-red-500" : "text-foreground/70"
+                    }`}>
+                      {slot.slice(0, 2)}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    {occupied ? (
+                      <div className="space-y-2">
+                        {appts.map(({ appointment, master, service }) => (
+                          <AppointmentCard
+                            key={appointment.id}
+                            appointment={appointment}
+                            master={master}
+                            service={service}
+                            showMaster
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div
+                        onClick={onNewAppointment}
+                        className="h-16 sm:h-auto rounded-xl border-2 border-dashed border-[hsl(350_65%_57%_/0.15)] flex items-center justify-center cursor-pointer hover:border-[hsl(350_65%_57%_/0.4)] hover:bg-[hsl(350_65%_57%_/0.04)] transition-all active:scale-[0.98]"
+                      >
+                        <span className="text-[13px] text-[hsl(350_65%_57%_/0.4)]">Свободно</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
-      <div className="flex-1 overflow-x-auto">
+      {/* ─── DESKTOP: table ─── */}
+      <div className="overflow-x-auto max-sm:hidden relative">
         <table className="w-full border-separate border-spacing-0">
           <thead>
             <tr>
               <th className="sticky left-0 z-10 bg-background w-0" />
-              {filteredMasters.map((m) => (
+              {masters.map((m) => (
                 <th
                   key={m.id}
-                  className="text-center py-3 border-b border-border bg-muted/30 font-semibold text-xs sm:text-sm text-foreground"
+                  className="text-center py-3 border-b border-border bg-background font-semibold text-sm"
+                  style={{ color: masterAccentHex[m.id] ?? "var(--foreground)" }}
                 >
-                  {m.name}
+                  Мастер {m.name}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="relative">
             {TIME_SLOTS.map((slot, slotIdx) => {
               const isLast = slotIdx === TIME_SLOTS.length - 1
+              const isCurHour = isCurrentHour(slotIdx)
+
               return (
-                <tr key={slot}>
-                  <td className="sticky left-0 z-10 bg-background align-bottom pr-3 h-[72px]">
-                    <span className="text-xs text-muted-foreground tabular-nums leading-none">
+                <tr
+                  key={slot}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${slotIdx * 0.025}s` }}
+                >
+                  <td className="sticky left-0 z-10 bg-background align-top pr-3 pt-[18px]">
+                    <span className="text-xs text-foreground/70 tabular-nums leading-none font-semibold">
                       {slot}
                     </span>
                   </td>
-                  {filteredMasters.map((master) => {
+                  {masters.map((master) => {
                     const appt = todayAppointments.find(
                       (a) => a.masterId === master.id && a.startTime === slot
                     )
                     const service = appt
                       ? services.find((s) => s.id === appt.serviceId)
                       : undefined
+                    const accent = masterAccentHex[master.id]
                     return (
                       <td
                         key={master.id}
-                        className={`h-[72px] p-0 ${isLast ? "" : "border-b border-border/40"} ${appt ? "bg-muted/30" : ""}`}
+                        className={`h-[72px] sm:h-20 py-0 px-2 relative ${
+                          isLast ? "" : "border-b border-border"
+                        }`}
+                        style={appt && accent ? { backgroundColor: `${accent}0D` } : undefined}
                       >
+                        {isCurHour && (
+                          <div
+                            className="absolute left-0 right-0 z-20 pointer-events-none"
+                            style={{ top: `${(currentMin / 60) * 72}px` }}
+                          >
+                            <div className="h-[2px] bg-red-500 w-full shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
+                            <div className="absolute -left-[3px] -top-[4px] h-[10px] w-[10px] rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
+                          </div>
+                        )}
                         {appt && service ? (
-                          <AppointmentCard
-                            appointment={appt}
-                            master={master}
-                            service={service}
-                          />
+                          <div className="animate-fade-in pt-0.5">
+                            <AppointmentCard
+                              appointment={appt}
+                              master={master}
+                              service={service}
+                            />
+                          </div>
                         ) : null}
                       </td>
                     )

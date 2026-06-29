@@ -3,6 +3,7 @@
 import type { AppointmentFormData, Appointment } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { todayDate } from "@/lib/mock-data"
+import { X } from "lucide-react"
 
 interface Props {
   data: AppointmentFormData
@@ -21,12 +22,12 @@ export function StepTime({ data, appointments, onChange }: Props) {
     .map((a) => a.startTime)
 
   return (
-    <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">
+    <div className="space-y-3 animate-fade-in" key={data.masterId}>
+      <p className="text-[15px] sm:text-sm text-muted-foreground max-sm:text-center">
         Выберите свободное время
       </p>
-      <div className="grid grid-cols-2 gap-2">
-        {TIME_SLOTS.map((slot) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2.5">
+        {TIME_SLOTS.map((slot, i) => {
           const isBooked = bookedSlots.includes(slot)
           const isSelected = data.startTime === slot
           return (
@@ -40,16 +41,21 @@ export function StepTime({ data, appointments, onChange }: Props) {
                   endTime: calcEnd(slot, data.serviceId),
                 })
               }
+              style={{ animationDelay: `${i * 0.04}s` }}
               className={cn(
-                "rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all",
+                "relative rounded-xl sm:rounded-lg border-2 px-4 py-4 sm:py-3 text-[16px] sm:text-sm font-medium transition-all duration-150 animate-fade-in",
                 isBooked &&
-                  "border-muted bg-muted/50 text-muted-foreground/40 line-through cursor-not-allowed",
-                !isBooked && isSelected && "border-foreground bg-muted",
+                  "border-dashed border-muted-foreground/20 bg-muted/30 text-muted-foreground/40 cursor-not-allowed",
+                !isBooked && isSelected &&
+                  "border-[hsl(350_65%_57%)] bg-[hsl(350_65%_57%_/0.06)] shadow-sm",
                 !isBooked && !isSelected &&
-                  "border-border bg-background hover:border-foreground/30 hover:bg-muted/50 cursor-pointer"
+                  "border-border bg-white hover:border-foreground/40 hover:bg-muted/40 hover:shadow-sm cursor-pointer active:scale-[0.98]"
               )}
             >
-              {slot}
+              <span className={cn(isBooked && "line-through")}>{slot}</span>
+              {isBooked && (
+                <X className="absolute right-3.5 sm:right-2.5 top-1/2 -translate-y-1/2 h-5 w-5 sm:h-3.5 sm:w-3.5 text-muted-foreground/40" />
+              )}
             </button>
           )
         })}
