@@ -80,7 +80,7 @@ export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated 
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[560px] sm:gap-0 max-sm:max-w-full max-sm:h-dvh max-sm:m-0 max-sm:rounded-none max-sm:border-0 max-sm:p-6 max-sm:top-0 max-sm:left-0 max-sm:translate-x-0 max-sm:translate-y-0">
+      <DialogContent className="sm:max-w-[560px] sm:gap-0 max-sm:max-w-full max-sm:h-dvh max-sm:m-0 max-sm:rounded-none max-sm:border-0 max-sm:p-6 max-sm:top-0 max-sm:left-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:flex max-sm:flex-col max-sm:overflow-hidden">
         <DialogHeader className="pb-3 sm:pb-4">
           <DialogTitle className="text-xl sm:text-lg">Новая запись</DialogTitle>
         </DialogHeader>
