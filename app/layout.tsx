@@ -41,9 +41,9 @@ export default function RootLayout({
                 <circle cx="4" cy="9" r="1" fill="currentColor" />
               </svg>
             </div>
-            <span className="font-bold text-lg sm:text-base tracking-tight text-foreground">Belle Nails</span>
-            <span className="text-muted-foreground/40 select-none text-lg sm:text-base">·</span>
-            <span className="text-[15px] sm:text-sm text-muted-foreground">Студия маникюра</span>
+            <span className="font-bold text-lg sm:text-base tracking-tight text-foreground leading-none">Belle Nails</span>
+            <span className="text-muted-foreground/40 select-none text-lg sm:text-base leading-none">·</span>
+            <span className="text-[15px] sm:text-sm text-muted-foreground leading-none">Студия маникюра</span>
           </div>
         </header>
         <div className="flex-1 flex flex-col min-h-0">
