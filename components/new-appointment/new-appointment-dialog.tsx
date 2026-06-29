@@ -3,10 +3,12 @@
 import { useState } from "react"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAppointments } from "@/components/providers/appointment-provider"
 import { StepClientService } from "./step-client-service"
@@ -81,9 +83,15 @@ export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[560px] sm:gap-0 max-sm:max-w-full max-sm:h-dvh max-sm:m-0 max-sm:rounded-none max-sm:border-0 max-sm:p-6 max-sm:top-0 max-sm:left-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:flex max-sm:flex-col max-sm:overflow-hidden">
-        <DialogHeader className="pb-3 sm:pb-4">
-          <DialogTitle className="text-xl sm:text-lg">Новая запись</DialogTitle>
-        </DialogHeader>
+        <div className="flex items-start justify-between">
+          <DialogHeader className="pb-3 sm:pb-4">
+            <DialogTitle className="text-xl sm:text-lg">Новая запись</DialogTitle>
+          </DialogHeader>
+          <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 mt-1 sm:mt-0">
+            <X className="h-5 w-5" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+        </div>
 
         <div className="flex items-center max-sm:justify-center gap-4 sm:gap-2 pb-5 sm:pb-4">
           {STEPS.map((label, i) => (
