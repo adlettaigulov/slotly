@@ -47,7 +47,7 @@ export function StepTime({ data, appointments, onChange }: Props) {
                 isBooked &&
                   "border-dashed border-muted-foreground/20 bg-muted/30 text-muted-foreground/40 cursor-not-allowed",
                 !isBooked && isSelected &&
-                  "border-[hsl(350_65%_57%)] bg-[hsl(350_65%_57%_/0.06)] shadow-sm",
+                  "border-primary bg-primary/10 text-primary shadow-sm",
                 !isBooked && !isSelected &&
                   "border-border bg-white hover:border-foreground/40 hover:bg-muted/40 hover:shadow-sm cursor-pointer active:scale-[0.98]"
               )}

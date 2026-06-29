@@ -200,8 +200,8 @@ export function ScheduleView({ onNewAppointment }: Props) {
                   className="animate-fade-in-up"
                   style={{ animationDelay: `${slotIdx * 0.025}s` }}
                 >
-                  <td className="sticky left-0 z-10 bg-background align-top pr-3 pt-[18px]">
-                    <span className="text-xs text-foreground/70 tabular-nums leading-none font-semibold">
+                  <td className="sticky left-0 z-10 bg-background align-top pr-3 overflow-visible">
+                    <span className="text-xs text-foreground/70 tabular-nums leading-none font-semibold -translate-y-[9px] inline-block">
                       {slot}
                     </span>
                   </td>
