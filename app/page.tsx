@@ -43,7 +43,7 @@ export default function Home() {
       />
 
       {toast && (
-        <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-toast-in px-4 w-full max-w-[400px]">
+        <div className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[100] animate-toast-in px-4 w-full max-w-[400px]">
           <div className="flex items-center gap-3 rounded-2xl bg-primary text-primary-foreground px-6 py-4 shadow-2xl text-[15px] font-medium">
             <CheckCircle2 className="h-5 w-5 shrink-0" />
             {toast}

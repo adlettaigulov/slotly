@@ -90,10 +90,7 @@ export function ScheduleView({ onNewAppointment }: Props) {
 
       {/* ─── MOBILE: timeline ─── */}
       <div className="sm:hidden -mx-4 px-4">
-        <div className="relative pl-10">
-          {/* Vertical rail */}
-          <div className="absolute left-[18px] top-0 bottom-0 w-px bg-border/50" />
-
+        <div className="relative">
           {/* Current time dot on rail */}
           {TIME_SLOTS.some((_, i) => isCurrentHour(i)) && (
             <div
@@ -129,12 +126,7 @@ export function ScheduleView({ onNewAppointment }: Props) {
 
                 <div className="flex items-start gap-4">
                   {/* Time label */}
-                  <div className="flex items-center gap-2 shrink-0 pt-1 w-[28px]">
-                    <div
-                      className={`h-2.5 w-2.5 rounded-full shrink-0 ${
-                        occupied ? "bg-[hsl(350_65%_57%_/0.25)]" : "bg-transparent"
-                      }`}
-                    />
+                  <div className="shrink-0 pt-1 w-[28px]">
                     <span className={`text-[13px] font-bold tabular-nums ${
                       current ? "text-red-500" : "text-foreground/70"
                     }`}>
