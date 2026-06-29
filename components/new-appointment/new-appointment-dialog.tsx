@@ -82,13 +82,13 @@ export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated 
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[560px] sm:gap-0 max-sm:max-w-full max-sm:h-dvh max-sm:m-0 max-sm:rounded-none max-sm:border-0 max-sm:p-6 max-sm:top-0 max-sm:left-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:flex max-sm:flex-col max-sm:overflow-hidden">
+      <DialogContent className="sm:max-w-[560px] sm:gap-0 max-sm:max-w-full max-sm:h-dvh max-sm:m-0 max-sm:rounded-none max-sm:border-0 max-sm:p-6 max-sm:top-0 max-sm:left-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:flex max-sm:flex-col">
         <div className="flex items-start justify-between">
           <DialogHeader className="pb-3 sm:pb-4">
-            <DialogTitle className="text-xl sm:text-lg">Новая запись</DialogTitle>
+            <DialogTitle className="text-2xl sm:text-lg">Новая запись</DialogTitle>
           </DialogHeader>
           <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 mt-1 sm:mt-0">
-            <X className="h-5 w-5" />
+            <X className="h-6 w-6 sm:h-5 sm:w-5" />
             <span className="sr-only">Close</span>
           </DialogClose>
         </div>
@@ -97,7 +97,7 @@ export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated 
           {STEPS.map((label, i) => (
             <div key={label} className="flex items-center gap-2 flex-1 max-sm:flex-none">
               <div
-                className={`flex h-8 w-8 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full text-sm sm:text-xs font-bold transition-all ${
+                className={`flex h-10 w-10 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full text-base sm:text-xs font-bold transition-all ${
                   i <= step
                     ? "bg-[hsl(350_65%_57%)] text-white shadow-sm"
                     : "bg-muted text-muted-foreground"
@@ -123,7 +123,7 @@ export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated 
           ))}
         </div>
 
-        <div className="max-sm:flex-1 max-sm:overflow-y-auto">
+        <div className="max-sm:flex-1 max-sm:overflow-y-auto max-sm:px-0.5">
           <div className="animate-slide-up" key={step}>
             {step === 0 && (
               <StepClientService data={data} services={services} onChange={updateData} />
@@ -154,7 +154,7 @@ export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated 
             variant="ghost"
             onClick={handleBack}
             disabled={step === 0}
-            className="h-12 sm:h-9 text-[15px] sm:text-sm flex-1 sm:flex-none"
+            className="h-14 sm:h-9 text-[17px] sm:text-sm flex-1 sm:flex-none"
           >
             Назад
           </Button>
@@ -162,7 +162,7 @@ export function NewAppointmentDialog({ open, onOpenChange, onAppointmentCreated 
             <Button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="h-12 sm:h-9 text-[15px] sm:text-sm flex-1 sm:flex-none"
+              className="h-14 sm:h-9 text-[17px] sm:text-sm flex-1 sm:flex-none"
             >
               Далее
             </Button>

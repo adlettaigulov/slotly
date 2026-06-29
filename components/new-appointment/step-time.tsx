@@ -23,7 +23,7 @@ export function StepTime({ data, appointments, onChange }: Props) {
 
   return (
     <div className="space-y-3 animate-fade-in" key={data.masterId}>
-      <p className="text-[15px] sm:text-sm text-muted-foreground max-sm:text-center">
+      <p className="text-[17px] sm:text-sm text-muted-foreground max-sm:text-center">
         Выберите свободное время
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2.5">
@@ -43,7 +43,7 @@ export function StepTime({ data, appointments, onChange }: Props) {
               }
               style={{ animationDelay: `${i * 0.04}s` }}
               className={cn(
-                "relative rounded-xl sm:rounded-lg border-2 px-4 py-4 sm:py-3 text-[16px] sm:text-sm font-medium transition-all duration-150 animate-fade-in",
+                "relative rounded-xl sm:rounded-lg border-2 px-5 py-5 sm:py-3 text-[17px] sm:text-sm font-medium transition-all duration-150 animate-fade-in",
                 isBooked &&
                   "border-dashed border-muted-foreground/20 bg-muted/30 text-muted-foreground/40 cursor-not-allowed",
                 !isBooked && isSelected &&
@@ -54,7 +54,7 @@ export function StepTime({ data, appointments, onChange }: Props) {
             >
               <span className={cn(isBooked && "line-through")}>{slot}</span>
               {isBooked && (
-                <X className="absolute right-3.5 sm:right-2.5 top-1/2 -translate-y-1/2 h-5 w-5 sm:h-3.5 sm:w-3.5 text-muted-foreground/40" />
+                <X className="absolute right-3.5 sm:right-2.5 top-1/2 -translate-y-1/2 h-6 w-6 sm:h-3.5 sm:w-3.5 text-muted-foreground/40" />
               )}
             </button>
           )

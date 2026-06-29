@@ -24,7 +24,7 @@ export function StepClientService({ data, services, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div className="space-y-2.5">
-        <Label htmlFor="clientName" className="text-[15px] sm:text-sm">
+        <Label htmlFor="clientName" className="text-[17px] sm:text-sm">
           Имя клиента
         </Label>
         <Input
@@ -33,12 +33,12 @@ export function StepClientService({ data, services, onChange }: Props) {
           value={data.clientName}
           onChange={(e) => onChange({ clientName: e.target.value })}
           autoFocus
-          className="h-12 sm:h-9 text-[16px] sm:text-sm px-4 sm:px-3"
+          className="h-14 sm:h-9 text-[17px] sm:text-sm px-4 sm:px-3"
         />
       </div>
 
       <div className="space-y-2.5">
-        <Label htmlFor="service" className="text-[15px] sm:text-sm">
+        <Label htmlFor="service" className="text-[17px] sm:text-sm">
           Услуга
         </Label>
         <Select
@@ -54,7 +54,7 @@ export function StepClientService({ data, services, onChange }: Props) {
         >
           <SelectTrigger
             id="service"
-            className="h-12 sm:h-9 text-[16px] sm:text-sm px-4 sm:px-3"
+            className="h-14 sm:h-9 text-[17px] sm:text-sm px-4 sm:px-3"
           >
             <SelectValue placeholder="Выберите услугу" />
           </SelectTrigger>
@@ -73,7 +73,7 @@ export function StepClientService({ data, services, onChange }: Props) {
         </Select>
       </div>
 
-      <div className="text-sm sm:text-xs text-muted-foreground text-center">
+      <div className="text-[15px] sm:text-xs text-muted-foreground text-center">
         {valid ? "Нажмите «Далее»" : "Заполните имя и выберите услугу"}
       </div>
     </div>

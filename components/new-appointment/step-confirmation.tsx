@@ -26,7 +26,7 @@ export function StepConfirmation({ data, master, service, onConfirm }: Props) {
 
       <Button
         onClick={onConfirm}
-        className="w-full h-11 text-base"
+        className="w-full h-14 sm:h-11 text-[17px] sm:text-base"
       >
         Создать запись
       </Button>
@@ -36,9 +36,9 @@ export function StepConfirmation({ data, master, service, onConfirm }: Props) {
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between px-4 py-3">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-medium">{value}</span>
+    <div className="flex items-center justify-between px-4 sm:px-4 py-4 sm:py-3">
+      <span className="text-[15px] sm:text-sm text-muted-foreground">{label}</span>
+      <span className="text-[15px] sm:text-sm font-medium">{value}</span>
     </div>
   )
 }
