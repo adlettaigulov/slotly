@@ -45,7 +45,7 @@ export const todayDate = getTodayDate()
 export const initialAppointments: Appointment[] = [
   {
     id: "appt-1",
-    clientName: "Анна",
+    clientName: "Айгерим",
     masterId: "alina",
     serviceId: "manicure",
     date: todayDate,
@@ -54,7 +54,7 @@ export const initialAppointments: Appointment[] = [
   },
   {
     id: "appt-2",
-    clientName: "Ольга",
+    clientName: "Асем",
     masterId: "maria",
     serviceId: "coating",
     date: todayDate,
@@ -72,7 +72,7 @@ export const initialAppointments: Appointment[] = [
   },
   {
     id: "appt-4",
-    clientName: "Светлана",
+    clientName: "Дана",
     masterId: "alina",
     serviceId: "design",
     date: todayDate,
@@ -99,7 +99,7 @@ export const initialAppointments: Appointment[] = [
   },
   {
     id: "appt-7",
-    clientName: "Елена",
+    clientName: "Мадина",
     masterId: "aizhan",
     serviceId: "complex",
     date: todayDate,
@@ -117,7 +117,7 @@ export const initialAppointments: Appointment[] = [
   },
   {
     id: "appt-9",
-    clientName: "Татьяна",
+    clientName: "Меруерт",
     masterId: "maria",
     serviceId: "manicure",
     date: todayDate,
