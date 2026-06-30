@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { useAppointments } from "@/components/providers/appointment-provider"
@@ -27,17 +26,8 @@ interface Props {
 
 export function ScheduleView({ onNewAppointment }: Props) {
   const { masters, appointments } = useAppointments()
-  const [now, setNow] = useState(new Date())
-
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 60000)
-    return () => clearInterval(t)
-  }, [])
 
   const todayAppointments = appointments.filter((a) => a.date === todayDate)
-
-  const currentHour = now.getHours()
-  const currentMin = now.getMinutes()
 
   function getAppointmentsAtSlot(slot: string) {
     return masters
@@ -52,13 +42,6 @@ export function ScheduleView({ onNewAppointment }: Props) {
       })
       .filter(Boolean) as { appointment: typeof todayAppointments[0]; master: typeof masters[0]; service: typeof services[0] }[]
   }
-
-  const isCurrentHour = (slotIdx: number) => {
-    const h = 9 + slotIdx
-    return currentHour >= h && currentHour < h + 1
-  }
-
-  const currentMinOffset = currentMin
 
   return (
     <div className="flex flex-col animate-fade-in">
@@ -91,45 +74,20 @@ export function ScheduleView({ onNewAppointment }: Props) {
       {/* ─── MOBILE: timeline ─── */}
       <div className="sm:hidden -mx-4 px-4">
         <div className="relative">
-          {/* Current time dot on rail */}
-          {TIME_SLOTS.some((_, i) => isCurrentHour(i)) && (
-            <div
-              className="absolute left-[18px] z-10 w-px"
-              style={{
-                top: `${TIME_SLOTS.findIndex((_, i) => isCurrentHour(i)) * 80 + currentMinOffset * (80 / 60)}px`,
-              }}
-            >
-              <div className="absolute -left-[5px] -top-[5px] h-[10px] w-[10px] rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-            </div>
-          )}
-
           {TIME_SLOTS.map((slot, slotIdx) => {
             const appts = getAppointmentsAtSlot(slot)
             const occupied = appts.length > 0
-            const current = isCurrentHour(slotIdx)
 
             return (
               <div
                 key={slot}
-                className={`animate-fade-in-up pb-3 ${current ? "relative" : ""}`}
+                className="animate-fade-in-up pb-3"
                 style={{ animationDelay: `${slotIdx * 0.025}s` }}
               >
-                {/* Current time line */}
-                {current && (
-                  <div
-                    className="absolute left-0 right-0 z-20 pointer-events-none"
-                    style={{ top: `${currentMinOffset * (80 / 60)}px` }}
-                  >
-                    <div className="h-[2px] bg-red-500 w-full shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
-                  </div>
-                )}
-
                 <div className="flex items-start gap-4">
                   {/* Time label */}
                   <div className="shrink-0 pt-1 w-[28px]">
-                    <span className={`text-[13px] font-bold tabular-nums ${
-                      current ? "text-red-500" : "text-foreground/70"
-                    }`}>
+                    <span className="text-[13px] font-bold tabular-nums text-foreground/70">
                       {slot.slice(0, 2)}
                     </span>
                   </div>
@@ -184,7 +142,6 @@ export function ScheduleView({ onNewAppointment }: Props) {
           <tbody className="relative">
             {TIME_SLOTS.map((slot, slotIdx) => {
               const isLast = slotIdx === TIME_SLOTS.length - 1
-              const isCurHour = isCurrentHour(slotIdx)
 
               return (
                 <tr
@@ -213,15 +170,6 @@ export function ScheduleView({ onNewAppointment }: Props) {
                         }`}
                         style={appt && accent ? { backgroundColor: `${accent}0D` } : undefined}
                       >
-                        {isCurHour && (
-                          <div
-                            className="absolute left-0 right-0 z-20 pointer-events-none"
-                            style={{ top: `${(currentMin / 60) * 72}px` }}
-                          >
-                            <div className="h-[2px] bg-red-500 w-full shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
-                            <div className="absolute -left-[3px] -top-[4px] h-[10px] w-[10px] rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.4)]" />
-                          </div>
-                        )}
                         {appt && service ? (
                           <div className="animate-fade-in pt-0.5">
                             <AppointmentCard
